@@ -11,14 +11,8 @@ node {
         sh 'npm install'
         sh 'npm start'
     }
-     stage('Archive') {
-		steps {
-			sh "cd dist && zip -r ../${DIST_ARCHIVE}.zip . && cd .."
-			archiveArtifacts artifacts: "${DIST_ARCHIVE}.zip", fingerprint: true
-		}
-	}
-	stage('Deploy') {
-		steps {
-			sh "aws s3 cp ${DIST_ARCHIVE}.zip s3://sampleapp-teja/${DIST_ARCHIVE}.zip --profile=default"
-    }
+    stage('pushing into s3') {
+        echo 'pushing into s3....'
+        sh 'aws s3 cp . s3://sampleapp-teja --recursive --profile=default'
+         }
 }
